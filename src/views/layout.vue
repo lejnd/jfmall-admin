@@ -36,6 +36,11 @@ export default {
             };
         },
         menus() {
+            /* 
+            ** 总管理员：teamid == 0
+            ** 团队管理员：isadmin == 1
+            ** 普通办单工号：isadmin == 0
+            */
             return [
                 {
                     "displayName": "订单",
@@ -48,6 +53,10 @@ export default {
                         {
                             "displayName": "异常订单",
                             "key": "errorList",
+                        },
+                        {
+                            "displayName": "待确认订单",
+                            "key": "tbcList",
                         }
                     ]
                 },
@@ -70,6 +79,17 @@ export default {
                         {
                             "displayName": "产品管理",
                             "key": "productList",
+                        }
+                    ]
+                },
+                {
+                    "displayName": "敏感客户",
+                    "key": "block",
+                    "isHide": localStorage.getItem('isadmin') == '0',
+                    "subMenu": [
+                        {
+                            "displayName": "敏感客户列表",
+                            "key": "blockList",
                         }
                     ]
                 },

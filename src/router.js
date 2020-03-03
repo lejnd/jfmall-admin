@@ -39,6 +39,14 @@ const router = new Router({
                     }]
                 }
             }, {
+                path: '/tbcList',
+                component: () => import( /* webpackChunkName: "tbcList" */ './views/order/tbcList.vue'),
+                meta: {
+                    breadcrumbs: [{
+                        name: '待确认订单',
+                    }]
+                }
+            }, {
                 path: '/accountList',
                 component: () => import( /* webpackChunkName: "accountList" */ './views/account/list.vue'),
                 meta: {
@@ -52,6 +60,14 @@ const router = new Router({
                 meta: {
                     breadcrumbs: [{
                         name: '产品管理',
+                    }]
+                }
+            }, {
+                path: '/blockList',
+                component: () => import( /* webpackChunkName: "blockList" */ './views/block/list.vue'),
+                meta: {
+                    breadcrumbs: [{
+                        name: '黑名单列表',
                     }]
                 }
             }]

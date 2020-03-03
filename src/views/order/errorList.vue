@@ -32,8 +32,9 @@
                                 type="datetimerange"
                                 range-separator="-"
                                 start-placeholder="开始日期"
-                                end-placeholder="结束日期">
-                            </el-date-picker>
+                                end-placeholder="结束日期"
+                                :default-time="['20:00:00', '20:00:00']"
+                            ></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
@@ -97,7 +98,14 @@
                 </el-form-item>
                 <div v-show="isSetArea">
                     <el-form-item label="选择地区：" prop="areaName">
-                        <el-cascader ref="cascaderAddr" v-model="dialogForm.areaCode" :options="citys" clearable @change="handleChange"></el-cascader>
+                        <el-cascader
+                            ref="cascaderAddr"
+                            v-model="dialogForm.areaCode"
+                            :options="citys"
+                            :props="{ value: 'code', label: 'name' }"
+                            clearable
+                            @change="handleChange"
+                        ></el-cascader>
                     </el-form-item>
                     <el-form-item label="详细地址：" prop="address">
                         <el-input v-model="dialogForm.addressDetail" type="textarea" placeholder="请输入详细地址"></el-input>
@@ -120,7 +128,7 @@ import List from '@/components/table-list';
 import listMethodBase from '@/components/listMethodBase';
 import common from "@/components/common";
 import BaseComponent from '@/views/base';
-import citys from '@/citys';
+import ydArea from '@/yd-area.js';
 import { mapGetters, mapActions } from 'vuex';
 
 const colNameMap = [
@@ -131,6 +139,9 @@ const colNameMap = [
     }, {
         key: 'name',
         displayName: '工号',
+    }, {
+        key: 'teamname',
+        displayName: '团队工号',
     }, {
         key: 'mobile',
         displayName: '手机号',
@@ -214,7 +225,7 @@ export default {
             exportLoading: false,
             queryString: '',
             
-            citys,
+            citys: [],            
             dialogFormVisible: false,
             isSetArea: false,
             orderItem: {},
@@ -404,7 +415,7 @@ export default {
                 this.$message.error('请选择发货商品');
                 return false;                
             }
-            let handleAddress = `${this.dialogForm.areaName || ''} ${this.dialogForm.addressDetail || ''}`;
+            let handleAddress = `${this.dialogForm.areaName || ''}${this.dialogForm.addressDetail || ''}`;
             this.$fly.post('/ydjf/saveadd', common.obj2formdata({
                 name: this.dialogForm.name || '',
                 sjmobile: this.dialogForm.mobile || '',
@@ -427,7 +438,7 @@ export default {
             console.log(e, this.$refs.cascaderAddr.getCheckedNodes()[0].pathLabels);
             let labels = this.$refs.cascaderAddr.getCheckedNodes()[0].pathLabels
             this.dialogForm = Object.assign({}, this.dialogForm, {
-                areaName: `${labels[0]} ${labels[1]} ${labels[2]}`
+                areaName: `${labels[0]} ${labels[1]} ${labels[2]} `
             })
         },
         resetDialogForm(formName) {
@@ -441,6 +452,17 @@ export default {
                 addressDetail: '',
             })
             this.isSetArea = false;
+        },
+        // 生成城市json
+        setCitys() {
+            let provList = ydArea.data.provinceList;
+            let cityList = ydArea.data.cityList;
+            let distList = ydArea.data.districtList;
+            this.citys = provList.map(item => Object.assign({}, item, {
+                children: cityList[item.code].map(sub => Object.assign({}, sub, {
+                    children: distList[sub.code]
+                })),
+            }));
         }
     },
     components: {
@@ -450,9 +472,11 @@ export default {
         // 超级管理员权限：手动成功
         if (localStorage.getItem('teamid') != 0) {
             this.operation = this.operation.filter(item => item.text != '手动成功')
+            this.colNameMap = this.colNameMap.filter(item => item.key != 'teamname');
         }
         this.$refs.orderList.queryHandler();
         this.getProducts(1);
+        this.setCitys();
     },
 };
 </script>

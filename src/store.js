@@ -44,10 +44,16 @@ const mutations = {
     },
     getProducts(state, data) {
         let isadmin = localStorage.getItem('isadmin') || '';
+        let userName = localStorage.getItem('userName') || '';
+
         // 只有创度团队 isadmin==2 时才显示 38500 积分
-        if (isadmin != '2') {
+        let host = window.location.host;
+        if (isadmin != '2' && host == 'whadmin.kmfx1.com') {
             data = data.filter(item => item.score != '38500');
         } 
+        // if (!userName.includes('保山') && host == 'whadmin.kmfx1.com') {
+        //     data = data.filter(item => item.score != '9660');
+        // } 
         state.products = data;
     }
 }

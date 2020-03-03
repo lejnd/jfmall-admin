@@ -218,7 +218,7 @@ export default {
             exportLoading: false,
             queryString: '',
             
-            citys: [],
+            citys: [],            
             dialogFormVisible: false,
             isSetArea: false,
             orderItem: {},
@@ -244,9 +244,7 @@ export default {
             if (!this.products) return [];
             let product = this.products.filter(item => item.id == this.orderItem.productid)[0] || {};
             let pGoods = product.goods || '';
-            let pGoodsArr = pGoods.split(',') || [];
-            console.log(this.products, this.orderItem, product, pGoods, pGoodsArr);
-            return pGoodsArr;
+            return pGoods.split(',') || [];
         }
     },
     methods: {
@@ -275,7 +273,7 @@ export default {
                 page: queryCondition.paging.pageIndex,
                 sadminname: this.form.sadminname,
                 keyword: this.form.keyword,
-                status: '1',
+                status: '3',
                 begintime: begintime ? listMethodBase.formatTime(begintime) : '',
                 // endtime: endtime ? listMethodBase.formatDate(endtime) + ' 23:59:59' : '',
                 endtime: endtime ? listMethodBase.formatTime(endtime) : '',

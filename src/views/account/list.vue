@@ -128,7 +128,7 @@ export default {
             dialogFormType: null,  // 0,工号分配   1,修改密码
             dialogForm: {
                 userName: '',
-                isteam: '1',
+                isteam: '',
                 password: '',
                 passwordConfirm: '',
             },

@@ -224,7 +224,8 @@ export default {
             if (args[0] == 'update') {
                 let item = args[1];
                 this.dialogForm = item;
-                this.goodsArray = item.goods.split(',') || [''];
+                let goods = item.goods || '';
+                this.goodsArray = goods.split(',') || [''];
                 console.log(this.goodsArray);
                 this.dialogFormVisible = true;                
             }
